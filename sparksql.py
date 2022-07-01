@@ -73,7 +73,7 @@ def sql(spark,movies_path,ratings_path,users_path):
     print('____________________how many movies for each rating_____________________')
     ratings=spark.read.csv(ratings_path,sep='::').toDF('user_id','movie_id','ratings','timestamp')
     ratings.createOrReplaceTempView('ratings_')
-    spark.sql('select count(ratings) as no_of_ratings,ratings from ratings_ group by ratings').show(100,False)
+    spark.sql('select count(avg_ratings) as no_of_ratings,avg_ratings from (select round(avg(ratings)) as avg_ratings,movie_id from ratings_ group by movie_id) group by avg_ratings').show(100,False)
     print('__________________________________________________________________________________________________________________________')
 
     time.sleep(5)
